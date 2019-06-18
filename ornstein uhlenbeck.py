@@ -1,10 +1,15 @@
 #https://math.stackexchange.com/questions/1287634/implementing-ornstein-uhlenbeck-in-matlab
 #https://www.pik-potsdam.de/members/franke/lecture-sose-2016/introduction-to-python.pdf
+#https://www.evernote.com/shard/s269/client/snv?noteGuid=9a7c2b51-5a01-4d6c-8b80-807e6b0789fd&noteKey=46bfa2e4ba9cc12d&sn=https%3A%2F%2Fwww.evernote.com%2Fshard%2Fs269%2Fsh%2F9a7c2b51-5a01-4d6c-8b80-807e6b0789fd%2F46bfa2e4ba9cc12d&title=Closed%2Bform%2BOrnstein-Uhlenbeck%2Bprocess
+#https://pythonforfinance.net/2016/05/09/python-backtesting-mean-reversion-part-2/
+#https://pypi.org/project/sdepy/
 #https://scikit-learn.org/stable/modules/model_evaluation.html
 
+#%%
 import numpy as np
 import matplotlib.pyplot as plt
 from math import *
+from seaborn import *
 plt.style.use('classic')
 from sklearn.metrics import mean_squared_error
 

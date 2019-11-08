@@ -19,7 +19,7 @@ Geométrico e Ornstein-Uhlenbeck.
     - Milstein para Movimento Browniano Geométrico
 
         - convergencia forte (feito)
-        - convergencia fraca 
+        - convergencia fraca (feito)
 
     - Milstein para Ornstein–Uhlenbeck
 

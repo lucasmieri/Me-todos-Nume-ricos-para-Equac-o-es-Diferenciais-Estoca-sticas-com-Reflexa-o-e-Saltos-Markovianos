@@ -13,8 +13,8 @@ Geométrico e Ornstein-Uhlenbeck.
 
     - Euler-Maruyama para Ornstein–Uhlenbeck
 
-        - convergencia forte
-        - convergencia fraca
+        - convergencia forte (revisar)
+        - convergencia fraca (revisar)
 
     - Milstein para Movimento Browniano Geométrico
 

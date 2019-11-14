@@ -2,22 +2,24 @@ lamb  = 2
 mu    = 1
 Xzero = 1
 
+################## PARTE III #########################
+# Fazendo os gráficos do erro das médias (FRACO)
 T  = 1
 N  = 2**9 # number of discrete time steps
 dt = T/N
 M  = 2000 # number of repetitions
 P  = 5
 
-Xem_at_T   = matrix(rep(0,M*p),ncol=P)
+Xem_at_T   = matrix(rep(0,M*P),ncol=P)
 Xtrue_at_T = rep(0,M)
 
 for(s in 1:M)
 {
     dW = sqrt(dt)*rnorm(N)
-    W  = cumsum(dW)
+    WT  = sum(dW)
     
     # Analytic solution
-    Xtrue = Xzero*exp((lamb-0.5*mu**2)*T+mu*W[length(W)])
+    Xtrue = Xzero*exp((lamb-0.5*mu**2)*T+mu*WT)
     Xtrue_at_T[s] = Xtrue
     
     # Euler-Maruyama:

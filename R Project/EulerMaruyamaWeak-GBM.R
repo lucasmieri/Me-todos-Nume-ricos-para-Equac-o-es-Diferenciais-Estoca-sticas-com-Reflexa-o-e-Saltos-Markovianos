@@ -43,7 +43,8 @@ mXerr = abs(mean(Xtrue_at_T) - colMeans(Xem_at_T))
 
 # Fazendo o gráfico
 dts = c(dt*2**(1:5))
-plot(dts,mXerr,ylab="Log of Abs. Difference",
+plot(dts,mXerr,main="Weak Convergence Geometric Brownian Motion",
+     ylab="Log of Abs. Difference",
      xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.001,10),log="xy")
 lines(dts,dts^(1),lwd=2,col="red")
 legend(0.005, 5, legend=c("Euler-Maruyama", "Reference (slope=1)"),

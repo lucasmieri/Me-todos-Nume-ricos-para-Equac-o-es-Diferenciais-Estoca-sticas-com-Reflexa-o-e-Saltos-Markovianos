@@ -40,7 +40,8 @@ mXerr = colMeans(Xerr)
 
 # Fazendo o gráfico do erro
 dts = c(dt*2**(1:5))
-plot(dts,mXerr,ylab="Log of Abs. Difference",
+plot(dts,mXerr,main="Strong Convergence Geometric Brownian Motion",
+     ylab="Log of Abs. Difference",
      xlab="Log of Time Step h",type="b",col="blue",ylim=c(0.001,10),lwd=2,log="xy")
 lines(dts,dts,lwd=2,col="red")
 legend(0.005, 5, legend=c("Milstein", "Reference (slope=1)"),
@@ -74,7 +75,8 @@ for(j in 1:floor(L))
     Winc= sum(dW[(R*(j-1)+1):(R*j)])
     XemV[j+1] = XemV[j] + lamb*XemV[j]*Dt + mu*XemV[j]*Winc + 0.5*(mu^2)*XemV[j]*(Winc^2-Dt)
 }
-plot(time,XtrueV,ylab="",xlab="Time",type="l",col="red",ylim=c(0,10))
+plot(time,XtrueV,main="Geometric Brownian Motion",
+     ylab="",xlab="Time",type="l",col="red",ylim=c(0,10))
 lines(time,XemV,type="l",lwd=2,col="blue")
 legend(0.005,9, legend=c("Euler-Maruyama", "Analytic Solution"),
        col=c("blue", "red"), lty=1, lwd=2)

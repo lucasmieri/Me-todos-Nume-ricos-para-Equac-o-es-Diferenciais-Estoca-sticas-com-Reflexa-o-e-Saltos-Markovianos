@@ -14,7 +14,7 @@ Xerr   = matrix(rep(0,M*P),ncol=P)
 for(s in 1:M)
 {
     dW = sqrt(dt)*rnorm(N)
-    WT  = sum(dW)
+    WT = sum(dW)
     
     # Analytic solution
     Xtrue = Xzero*exp((lamb-0.5*mu**2)*T+mu*WT)

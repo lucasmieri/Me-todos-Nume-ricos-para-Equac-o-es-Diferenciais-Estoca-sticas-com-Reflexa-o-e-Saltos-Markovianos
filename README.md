@@ -13,8 +13,8 @@ Geométrico e Ornstein-Uhlenbeck.
 
     - Euler-Maruyama para Ornstein–Uhlenbeck
 
-        - convergencia forte (revisar)
-        - convergencia fraca (revisar)
+        - convergencia forte (feito)
+        - convergencia fraca (feito)
 
     - Milstein para Movimento Browniano Geométrico
 
@@ -23,8 +23,8 @@ Geométrico e Ornstein-Uhlenbeck.
 
     - Milstein para Ornstein–Uhlenbeck
 
-        - convergencia forte 
-        - convergencia fraca
+        - convergencia forte  (vide EM)
+        - convergencia fraca (vide EM)
 
 PARTE2: Verificar ordem de convergência para os métodos numéricos
 para EDEs com Markov Switch.
@@ -34,6 +34,7 @@ para EDEs com Markov Switch.
 
         - convergencia forte (? 1/2)
         - convergencia fraca (? 1)
+        - GBM (com saltos)
 
     - Método do Nguyen (Artigo 2018) usando Movimento Browniano Geométrico
       e Cadeia de Markov igual ao do artigo do Mao. (ordem 1 forte)

@@ -14,10 +14,10 @@ Xerr = matrix(rep(0,M*P),ncol=P)
 for(s in 1:M)
 {
     dW = sqrt(dt)*rnorm(N)
-    WT = sum(dW)
+    WT = sum(sigma*exp(-theta*(t-seq(dt,T,dt))) %*% dW)
     
     # Analytic solution
-    Xtrue = Xzero*exp(-theta*T) + mu*(1-exp(-theta*T)) + sigma*sqrt((1-exp(-2*theta*T))/(2*theta*T))*WT
+    Xtrue = Xzero*exp(-theta*T) + mu*(1-exp(-theta*T)) + WT
 
     # Euler-Maruyama:
     for( p in 1:P )
@@ -42,8 +42,8 @@ mXerr = colMeans(Xerr)
 dts = c(dt*2**(1:P))
 plot(dts,mXerr,ylab="Log of Abs. Difference",
      xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.001,10),log="xy")
-lines(dts,dts^(1/2),lwd=2,col="red")
-legend(0.015, 1e-02, legend=c("Euler-Maruyama", "Reference (slope=1/2)"),
+lines(dts,dts^1,lwd=2,col="red")
+legend(0.005, 1e+01, legend=c("Euler-Maruyama", "Reference (slope=1)"),
        col=c("blue", "red"), lty=1, lwd=2)
 
 ################## PARTE II #########################
@@ -61,9 +61,9 @@ dW = sqrt(dt)*rnorm(N)
 XtrueV = rep(0,floor(L)+1)
 XtrueV[1] = Xzero
 for(j in 1:floor(L)){
-    W = sum(dW[0:(R*j)])
     t = j*Dt
-    XtrueV[j+1] = Xzero*exp(-theta*t) + mu*(1-exp(-theta*t)) + sigma*exp(-theta*t)*sqrt((exp(2*theta*t)-1)/(2*theta*t))*W
+    WT = sum(sigma*exp(-theta*(t-seq(dt,t,dt))) %*% dW[0:(R*j)])
+    XtrueV[j+1] = Xzero*exp(-theta*t) + mu*(1-exp(-theta*t)) + WT
 }
 
 # Euler-Maruyama:

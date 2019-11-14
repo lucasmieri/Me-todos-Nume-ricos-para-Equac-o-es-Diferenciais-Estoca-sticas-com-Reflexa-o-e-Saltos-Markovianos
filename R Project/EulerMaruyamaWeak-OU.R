@@ -17,7 +17,7 @@ Xtrue_at_T = rep(0,M)
 for(s in 1:M)
 {
     dW = sqrt(dt)*rnorm(N)
-    WT = sum(sigma*exp(-theta*(t-seq(dt,T,dt))) %*% dW)
+    WT = sum(sigma*exp(-theta*(T-seq(dt,T,dt))) %*% dW)
     
     # Analytic solution
     Xtrue = Xzero*exp(-theta*T) + mu*(1-exp(-theta*T)) + WT

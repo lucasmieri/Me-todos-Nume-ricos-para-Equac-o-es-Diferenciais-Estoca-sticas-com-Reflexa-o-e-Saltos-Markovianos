@@ -26,21 +26,18 @@ Geométrico e Ornstein-Uhlenbeck.
         - convergencia forte  (vide EM)
         - convergencia fraca (vide EM)
 
-PARTE2: Verificar ordem de convergência para os métodos numéricos
-para EDEs com Markov Switch.
-
-    - Método do Mao (Artigo 2004) usando Movimento Browniano Geométrico e
-      Cadeia de Markov igual ao do artigo dele. 
-
-        - convergencia forte (? 1/2)
-        - convergencia fraca (? 1)
-        - GBM (com saltos)
+PARTE2: Comparar o método do Mao com do Nguyen com aplicação do artigo do Zhang
+    
+    - Implementar o método do MAO para o MBG com parâmetros que possam ser 
+      editáveis depois (pode usar os dados do Zhang da Microsoft), para
+      uma cadeia de Markov com dois estados.
 
     - Método do Nguyen (Artigo 2018) usando Movimento Browniano Geométrico
-      e Cadeia de Markov igual ao do artigo do Mao. (ordem 1 forte)
+      e Cadeia de Markov igual ao do artigo do Mao.
+      
+    - Comparar razão probabilidade ganho/perda usando método do Mao e Nguyen via
+      monte carlo com o resultado analítico do artigaodo Zhang.
 
-        - convergencia forte (? 1)
-        - convergencia fraca (? 1)
 
 *Futuro*: Métodos numéricos com taxas dependentes de estado!
 

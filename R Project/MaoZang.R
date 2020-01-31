@@ -38,5 +38,5 @@ for(j in 1:floor(L))
     # TODO
     XemV[j+1] = XemV[j] + Dt*lamb*XemV[j] + mu*XemV[j]*Winc
 }
-plot(time,XtrueV,main="Geometric Brownian Motion (Zhang's Model)",
+plot(time,XtrueV,main="Geometric Brownian Motion\n (Zhang's Model)",
      ylab="",xlab="Time",type="l",col="red",ylim=c(0,10))

@@ -1,0 +1,22 @@
+
+----implementação do modelo: 
+
+(python) https://github.com/timsetsfire/markov-switching/blob/master/Markov%20Switching%20Model.ipynb
+(python) https://github.com/statsmodels/statsmodels/blob/32011b6b5e89e1e9d8061cd210406790d4ee7430/statsmodels/tsa/regime_switching/markov_switching.py
+
+
+
+----Bibliotecas:
+(R) https://cran.r-project.org/web/packages/MSGARCH/MSGARCH.pdf
+(Python) https://github.com/statsmodels/statsmodels
+
+
+----Exemplos:
+
+(R)  https://rpubs.com/ibn_abdullah/markovs
+
+(R) https://cran.r-project.org/web/packages/MSwM/vignettes/examples.pdf
+
+(python) http://www.chadfulton.com/topics/mar_hamilton.html
+
+

@@ -62,7 +62,7 @@ for(j in 1:floor(L))
     
     #zhang
     
-    Xemv_zhang[j+1] = Xemv_zhang[j] + Dt*r[prob+1]*XemV[j] + sigma[prob+1]*XemV[j]*Winc
+    Xemv_zhang[j+1] = Xemv_zhang[j] + Dt*r[prob+1]*Xemv_zhang[j] + sigma[prob+1]*Xemv_zhang[j]*Winc
     
     prob<- sample(0:1, 1)
     

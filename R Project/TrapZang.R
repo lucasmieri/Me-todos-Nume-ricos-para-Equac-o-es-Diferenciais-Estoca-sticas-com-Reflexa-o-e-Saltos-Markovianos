@@ -1,5 +1,7 @@
 library(expm)
 
+#A WEAK TRAPEZOIDAL METHOD FOR A CLASS OF STOCHASTIC DIFFERENTIAL EQUATIONS
+
 lambda<-c(6.04, 8.90) #alta e baixa
 sigma<-c(0.44, 0.63) 
 prob=0
@@ -27,17 +29,24 @@ X[1]= X0
 A   = rep(0,floor(L)+1)
 A[1] = sample(c(1,2),1,prob=p0)
 
-# Gerar P (usar expm)
-Rho <- matrix(c(-lambda[1], lambda[1], lambda[2], -lambda[2]), nrow=2,byrow=TRUE)
-P<-expm(Rho*Dt)
+# TODO:
+# Gerar o tempo até a primeira transição rexp(\lambd[A[1]],1)
+tau <- rexp(1,lambda[A[1]])
 
 for(j in 1:floor(L))
 {
-    # Gerar dinamica da cadeia de Markov
-    A[j+1] = sample(c(1,2),1,prob=P[A[j],])
+    # TODO:
+    if(tau <= time[j+1]){
+        if( A[j] == 1 ) A[j+1] = 2
+        else            A[j+1] = 1
+        tau <- tau + rexp(1,lambda[A[j+1]])
+    } else {
+        A[j+1] = A[j]
+    }
 
-    Winc= sqrt(Dt)*rnorm(1)
-    X[j+1] = X[j] + Dt*mu[A[j+1]]*X[j] + sigma[A[j+1]]*X[j]*Winc
+    Winc = sqrt(Dt)*rnorm(1)    
+    # SUBS PELO METODO DO TRAPEZIO 
+    X[j+1]=X[j]+Dt*X[j]*mu[A[j+1]]+X[j]*Winc*sigma[A[j+1]] + 0.5*(sigma[A[j+1]]^2)*X[j]*(Winc^2- Dt)
 }
 
 # https://www.statmethods.net/advgraphs/axes.html
@@ -47,4 +56,6 @@ plot(time,X,main="Geometric Brownian Motion\n (Zhang's Model)",
 par(new=TRUE)
 plot(time,2-A,ylab="",xlab="Time",type="s",lty=2,col="blue",lwd=2,axes=FALSE)
 axis(4, at=c(0,1),las=1)
+
+
 

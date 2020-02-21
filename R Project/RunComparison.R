@@ -22,13 +22,21 @@ f <- function(x) x
 Fval_paths_MaoZang <- matrix(rep(0,M*P),ncol=P)
 for( s in 1:M )
 {
+    # Run Reference
+   
+    # Run Simulations 
     for( p in 1:P )
     {
         R  <- 2**p
         L  <- N/R
         Dt <- R*dt
-        
+       
+        # Mao's Method 
         X <- runMaoZang(Dt,L)$X
         Fval_paths_MaoZang[s,p] <- f(X[length(X)])
+        
+        # Nguyen's Method
+        
+        # Trapezoidal Method
     }
 }

@@ -1,9 +1,9 @@
-runMaoZang <- function(Dt,L)
+runMao <- function(Dt,L)
 {
     # Initializing
-    X   = rep(0,floor(L)+1)
-    X[1]= X0
-    A   = rep(0,floor(L)+1)
+    X    = rep(0,floor(L)+1)
+    X[1] = X0
+    A    = rep(0,floor(L)+1)
     A[1] = sample(c(1,2),1,prob=p0)
 
     # Gerar P (usar expm)
@@ -18,6 +18,5 @@ runMaoZang <- function(Dt,L)
         Winc   <- sqrt(Dt)*rnorm(1)
         X[j+1] <- X[j] + Dt*mu[A[j+1]]*X[j] + sigma[A[j+1]]*X[j]*Winc
     }
-    
     return(list('X' = X, 'A' = A))
 }

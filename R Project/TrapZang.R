@@ -49,28 +49,17 @@ for(j in 1:floor(L))
         A[j+1] = A[j]
     }
 
-    Winc = sqrt(Dt)*rnorm(1)    
     # SUBS PELO METODO DO TRAPEZIO 
     
     #step1
-    
-    
-    
-    X_step=X[j]+mu[A[j+1]]*X[j]*theta*Dt+sigma[A[j+1]]*Winc*sqrt(theta*Dt)
+    X_step=X[j]+mu[A[j+1]]*X[j]*theta*Dt+sigma[A[j+1]]*X[j]*rnorm(1)*sqrt(theta*Dt)
   
-    
     #step2
+    aux=max(0,alfa_1*(X_step*sigma[A[j+1]])^2-alfa_2*(X[j]*sigma[A[j+1]])^2) 
     
-    
-    aux=abs(alfa_1*X_step*sigma[A[j+1]]^2-alfa_2*X[j]*sigma[A[j+1]]^2) 
-    
-    X[j+1]=X_step+(alfa_1*mu[A[j+1]]*X[j]- alfa_2*mu[A[j+1]]*X[j])*(1-theta)*Dt+ sqrt(aux)*Winc*sqrt((1-theta)*Dt)
-    
-    
-    #X[j+1]=X[j]+Dt*X[j]*mu[A[j+1]]+X[j]*Winc*sigma[A[j+1]] + 0.5*(sigma[A[j+1]]^2)*X[j]*(Winc^2- Dt)
-
-    
-    }
+    X[j+1]=X_step+(alfa_1*mu[A[j+1]]*X_step- alfa_2*mu[A[j+1]]*X[j])*(1-theta)*Dt
+           + sqrt(aux)*rnorm(1)*sqrt((1-theta)*Dt)
+}
 
 # https://www.statmethods.net/advgraphs/axes.html
 par(mfrow=c(1,1))

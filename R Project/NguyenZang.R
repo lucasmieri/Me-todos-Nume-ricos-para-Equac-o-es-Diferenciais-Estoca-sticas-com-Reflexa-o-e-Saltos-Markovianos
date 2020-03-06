@@ -46,7 +46,8 @@ for(j in 1:floor(L))
   }
 
   Winc = sqrt(Dt)*rnorm(1)
-  X[j+1]=X[j]+Dt*X[j]*mu[A[j+1]]+X[j]*Winc*sigma[A[j+1]] + 0.5*(sigma[A[j+1]]^2)*X[j]*(Winc^2- Dt)
+  X[j+1]=X[j]+Dt*X[j]*mu[A[j+1]]+X[j]*Winc*sigma[A[j+1]]
+  + 0.5*(sigma[A[j+1]]*X[j])^2*(Winc^2- Dt)
 }
 
 # https://www.statmethods.net/advgraphs/axes.html

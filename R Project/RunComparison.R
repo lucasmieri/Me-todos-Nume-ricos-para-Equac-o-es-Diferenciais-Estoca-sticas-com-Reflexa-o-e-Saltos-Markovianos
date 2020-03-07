@@ -16,30 +16,32 @@ p0     <- c(0.5,0.5)
 T  <- 1
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 10000 # number of repetitions
-P  <- 5    # number of step sizes
+M  <- 100000 # number of repetitions
+P  <- 5      # number of step sizes
 
 f <- function(x) x
 
-Fval_paths_Mao    <- matrix(rep(0,M*P),ncol=P)
-Fval_paths_Nguyen <- matrix(rep(0,M*P),ncol=P)
-Fval_paths_Trap1  <- matrix(rep(0,M*P),ncol=P)
-Fval_paths_Trap2  <- matrix(rep(0,M*P),ncol=P)
-Fval_paths_REF    <- matrix(rep(0,M),ncol=1)
+X_Mao    <- matrix(rep(0,M*P),ncol=P)
+X_Nguyen <- matrix(rep(0,M*P),ncol=P)
+X_Trap1  <- matrix(rep(0,M*P),ncol=P)
+X_Trap2  <- matrix(rep(0,M*P),ncol=P)
+X_Ref    <- matrix(rep(0,M),ncol=1)
 
+run_simulations <- TRUE
 if(file.exists("PlotData.rda"))
 {
     load("PlotData.rda")
+    run_simulations <- FALSE
     
 } else {
-    
+
     for( s in 1:M )
     {
         # Run Reference
         # Nguyen's Method
         Nref <- 2^15  
-        X <- runNguyen(T/Nref, Nref)$X
-        Fval_paths_REF[s,1] <- f(X[length(X)])
+        #X_Ref[s,1] <- tail(runNguyen(T/Nref, Nref)$X,n=1)
+        X_Ref[s,1] <- tail(runMao(T/Nref, Nref)$X,n=1)
         
         # Run Simulations
         for(p in 1:P)
@@ -49,34 +51,26 @@ if(file.exists("PlotData.rda"))
             Dt <- R * dt
     
             # Mao's Method
-            X <- runMao(Dt, L)$X
-            Fval_paths_Mao[s, p] <- f(X[length(X)])
+            X_Mao[s,p] <- tail(runMao(Dt, L)$X,n=1)
     
             # Nguyen's Method
-            X <- runNguyen(Dt, L)$X
-            Fval_paths_Nguyen[s, p] <- f(X[length(X)])
+            X_Nguyen[s,p] <- tail(runNguyen(Dt, L)$X,n=1)
     
             # Trapezoidal Method
-            X <- runTrap1(Dt, L)$X
-            Fval_paths_Trap1[s, p] <- f(X[length(X)])
-    
-            X <- runTrap2(Dt, L)$X
-            Fval_paths_Trap2[s, p] <- f(X[length(X)])
+            X_Trap1[s,p] <- tail(runTrap1(Dt, L)$X,n=1)
+            X_Trap2[s,p] <- tail(runTrap2(Dt, L)$X,n=1)
         }
     }
-    save(Fval_paths_REF,
-         Fval_paths_Mao,
-         Fval_paths_Nguyen,
-         Fval_paths_Trap1,
-         Fval_paths_Trap2,file="PlotData.rda")
+
+    save(X_Ref,X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData.rda")
 }
 
 # Tirando a média e calculando a diferença entre médias.
-RefMean   = mean(Fval_paths_REF)
-ErrMao    = abs(RefMean - colMeans(Fval_paths_Mao))
-ErrNguyen = abs(RefMean - colMeans(Fval_paths_Nguyen))
-ErrTrap1  = abs(RefMean - colMeans(Fval_paths_Trap1))
-ErrTrap2  = abs(RefMean - colMeans(Fval_paths_Trap2))
+RefMean   = mean( apply(X_Ref,1:2,f) )
+ErrMao    = abs( RefMean - colMeans(apply(X_Mao,   1:2,f)) )
+ErrNguyen = abs( RefMean - colMeans(apply(X_Nguyen,1:2,f)) )
+ErrTrap1  = abs( RefMean - colMeans(apply(X_Trap1, 1:2,f)) )
+ErrTrap2  = abs( RefMean - colMeans(apply(X_Trap2, 1:2,f)) )
 
 # Fazendo o gráfico
 dts = c(dt*2**(1:5))

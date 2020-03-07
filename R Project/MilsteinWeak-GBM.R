@@ -19,7 +19,7 @@ for(s in 1:M)
     WT  = sum(dW)
     
     # Analytic solution
-    Xtrue = Xzero*exp((lamb-0.5*mu**2)*T+mu*WT)
+    Xtrue = Xzero*exp((lamb-0.5*(mu)**2)*T+mu*WT)
     Xtrue_at_T[s] = Xtrue
     
     # Euler-Maruyama:

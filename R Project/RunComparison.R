@@ -21,11 +21,11 @@ P  <- 5      # number of step sizes
 
 f <- function(x) x
 
-X_Mao    <- matrix(rep(0,M*P),ncol=P)
-X_Nguyen <- matrix(rep(0,M*P),ncol=P)
-X_Trap1  <- matrix(rep(0,M*P),ncol=P)
-X_Trap2  <- matrix(rep(0,M*P),ncol=P)
-X_Ref    <- matrix(rep(0,M),ncol=1)
+#X_Mao    <- matrix(rep(0,M*P),ncol=P)
+#X_Nguyen <- matrix(rep(0,M*P),ncol=P)
+#X_Trap1  <- matrix(rep(0,M*P),ncol=P)
+#X_Trap2  <- matrix(rep(0,M*P),ncol=P)
+X_Ref    <- matrix(rep(0,M*P),ncol=1)
 
 run_simulations <- TRUE
 if(file.exists("PlotData.rda"))
@@ -37,28 +37,26 @@ if(file.exists("PlotData.rda"))
 
     for( s in 1:M )
     {
-        # Run Reference
-        # Nguyen's Method
-        Nref <- 2^15  
-        #X_Ref[s,1] <- tail(runNguyen(T/Nref, Nref)$X,n=1)
-        X_Ref[s,1] <- tail(runMao(T/Nref, Nref)$X,n=1)
-        
         # Run Simulations
         for(p in 1:P)
         {
+            # Run Reference  (Nguyen's Method)
+            Nref <- 2^15  
+            X_Ref[s*p] <- tail(runNguyen(T/Nref, Nref)$X,n=1)
+        
             R  <- 2**p
             L  <- N / R
             Dt <- R * dt
     
             # Mao's Method
-            X_Mao[s,p] <- tail(runMao(Dt, L)$X,n=1)
+            #X_Mao[s,p] <- tail(runMao(Dt, L)$X,n=1)
     
             # Nguyen's Method
-            X_Nguyen[s,p] <- tail(runNguyen(Dt, L)$X,n=1)
+            #X_Nguyen[s,p] <- tail(runNguyen(Dt, L)$X,n=1)
     
             # Trapezoidal Method
-            X_Trap1[s,p] <- tail(runTrap1(Dt, L)$X,n=1)
-            X_Trap2[s,p] <- tail(runTrap2(Dt, L)$X,n=1)
+            #X_Trap1[s,p] <- tail(runTrap1(Dt, L)$X,n=1)
+            #X_Trap2[s,p] <- tail(runTrap2(Dt, L)$X,n=1)
         }
     }
 

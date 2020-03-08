@@ -17,7 +17,7 @@ p0     <- c(lambda[2]/(lambda[1]+lambda[2]),lambda[1]/(lambda[1]+lambda[2])) #0.
 T  <- 1.00
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 100000 # number of repetitions
+M  <- 200000 # number of repetitions
 P  <- 5      # number of step sizes
 
 f <- function(x) x

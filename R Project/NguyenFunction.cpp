@@ -7,9 +7,9 @@ double NguyenSim(double Dt, unsigned int L, double X0, double A0,
     double X = X0;
     int    A = A0;
     double t = 0;
-    double tau = rexp(1,lambda[A])[0];
     
-    NumericVector norms = rnorm(L+1);
+    NumericVector norms = rnorm(L);
+    double tau = rexp(1,lambda[A])[0];
     for(unsigned int j = 0; j < L; ++j)
     {
         t += Dt;
@@ -40,10 +40,15 @@ NumericVector NguyenFuncRcpp(double Dt, unsigned int L, unsigned int M)
     IntegerVector E      = {0,1};
     int A0               = sample(E,1,false,p0)[0];
    
+    Function set_seed("set.seed");
+    
     //Running Simulations 
     NumericVector X(M);
     for(unsigned int j = 0; j < M; ++j)
+    {
+        set_seed(j);
         X[j] = NguyenSim(Dt,L,X0,A0,mu,sigma,lambda);
+    }
     
     return(X);
 }

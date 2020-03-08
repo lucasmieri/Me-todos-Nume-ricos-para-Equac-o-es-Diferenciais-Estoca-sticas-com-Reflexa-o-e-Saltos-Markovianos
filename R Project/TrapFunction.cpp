@@ -7,13 +7,15 @@ double TrapSim1(double Dt, unsigned int L, double X0, double A0,
     double X = X0;
     int    A = A0;
     double t = 0;
-    double tau = rexp(1,lambda[A])[0];
     
     double theta  = 0.5;
     double alfa_1 = 1/(2*theta*(1-theta));
     double alfa_2 = ((1-theta)*(1-theta)+theta*theta)/(2*theta*(1-theta));
     
-    NumericVector norms = rnorm(2*(L+1));
+    NumericVector norms1 = rnorm(L);
+    NumericVector norms2 = rnorm(L);
+    
+    double tau = rexp(1,lambda[A])[0];
     double X_step, aux;
     for(unsigned int j = 0; j < L; ++j)
     {
@@ -25,14 +27,14 @@ double TrapSim1(double Dt, unsigned int L, double X0, double A0,
             tau += rexp(1,lambda[A])[0];
         }
         //step1
-        X_step = X + mu[A]*X*theta*Dt + sigma[A]*X*norms[2*j]*sqrt(theta*Dt);
+        X_step = X + mu[A]*X*theta*Dt + sigma[A]*X*norms2[j]*sqrt(theta*Dt);
             
         //step2
         aux = alfa_1*(X_step*sigma[A])*(X_step*sigma[A])-alfa_2*(X*sigma[A])*(X*sigma[A]);
         aux = (aux>0)? aux:0;
                 
         X = X_step + (alfa_1*mu[A]*X_step - alfa_2*mu[A]*X)*(1-theta)*Dt
-                + sqrt(aux)*norms[2*j+1]*sqrt((1-theta)*Dt);
+                + sqrt(aux)*norms1[j]*sqrt((1-theta)*Dt);
 
         if(j % 1000 == 0) Rcpp::checkUserInterrupt();
     }
@@ -49,21 +51,22 @@ double TrapSim2(double Dt, unsigned int L, double X0, double A0,
     double alfa_1 = 1/(2*theta*(1-theta));
     double alfa_2 = ((1-theta)*(1-theta)+theta*theta)/(2*theta*(1-theta));
     
-    NumericVector norms = rnorm(2*(L+1));
+    NumericVector norms1 = rnorm(L);
+    NumericVector norms2 = rnorm(L); 
     double X_step, aux;
     for(unsigned int j = 0; j < L; ++j)
     {
         A = sample(E,1,false,(NumericVector)P(A,_))[0];
         
         //step1
-        X_step = X + mu[A]*X*theta*Dt + sigma[A]*X*norms[2*j]*sqrt(theta*Dt);
+        X_step = X + mu[A]*X*theta*Dt + sigma[A]*X*norms2[j]*sqrt(theta*Dt);
             
         //step2
         aux = alfa_1*(X_step*sigma[A])*(X_step*sigma[A])-alfa_2*(X*sigma[A])*(X*sigma[A]);
         aux = (aux>0)? aux:0;
         
         X = X_step + (alfa_1*mu[A]*X_step - alfa_2*mu[A]*X)*(1-theta)*Dt
-            + sqrt(aux)*norms[2*j+1]*sqrt((1-theta)*Dt);
+            + sqrt(aux)*norms1[j]*sqrt((1-theta)*Dt);
             
         if(j % 1000 == 0) Rcpp::checkUserInterrupt();
     }
@@ -82,12 +85,17 @@ NumericVector TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigne
     NumericVector sigma  = env["sigma"];
     IntegerVector E      = {0,1};
     int A0               = sample(E,1,false,p0)[0];
+    
+    Function set_seed("set.seed");
    
     //Running Simulations 
     NumericVector X(M);
     if(type == 1)
         for(unsigned int j = 0; j < M; ++j)
+        {
+            set_seed(j);
             X[j] = TrapSim1(Dt,L,X0,A0,mu,sigma,lambda);
+        }
     else
     {
         //Gerar P (usar expm)
@@ -97,7 +105,10 @@ NumericVector TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigne
         Function expm("expm"); 
         NumericMatrix P = expm(Rho*Dt);
         for(unsigned int j = 0; j < M; ++j)
+        {
+            set_seed(j);
             X[j] = TrapSim2(Dt,L,X0,A0,mu,sigma,P,E);
+        }
     }
     
     return(X);

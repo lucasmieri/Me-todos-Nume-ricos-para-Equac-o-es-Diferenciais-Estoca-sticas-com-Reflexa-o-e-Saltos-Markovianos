@@ -17,8 +17,8 @@ p0     <- c(0.5,0.5)
 T  <- 1.00
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 200000 # number of repetitions
-P  <- 5      # number of step sizes
+M  <- 10000000 # number of repetitions
+P  <- 5        # number of step sizes
 
 f <- function(x) x
 

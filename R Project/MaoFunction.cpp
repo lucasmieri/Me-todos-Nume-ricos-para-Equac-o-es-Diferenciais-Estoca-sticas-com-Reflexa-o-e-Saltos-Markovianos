@@ -7,8 +7,8 @@ double MaoSim(double Dt, unsigned int L, double X0, double A0,
 {
     double X = X0;
     int    A = A0;
-    
-    NumericVector norms = rnorm(L+1);
+   
+    NumericVector norms = rnorm(L);
     for(unsigned int j = 0; j < L; ++j)
     {
         A = sample(E,1,false,(NumericVector)P(A,_))[0];
@@ -39,10 +39,15 @@ NumericVector MaoFuncRcpp(double Dt, unsigned int L, unsigned int M)
     Function expm("expm"); 
     NumericMatrix P = expm(Rho*Dt);
    
+    Function set_seed("set.seed");
+    
     //Running Simulations 
     NumericVector X(M);
     for(unsigned int j = 0; j < M; ++j)
+    {
+        set_seed(j); 
         X[j] = MaoSim(Dt,L,X0,A0,mu,sigma,P,E);
+    }
     
     return(X);
 }

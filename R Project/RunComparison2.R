@@ -1,9 +1,9 @@
 rm(list=ls())
 library(expm)
 library(Rcpp)
-Rcpp::sourceCpp('MaoFunction.cpp')
-Rcpp::sourceCpp('NguyenFunction.cpp')
-Rcpp::sourceCpp('TrapFunction.cpp')
+Rcpp::sourceCpp('MaoFunction2.cpp')
+Rcpp::sourceCpp('NguyenFunction2.cpp')
+Rcpp::sourceCpp('TrapFunction2.cpp')
 
 ## Data for the simulation Zhang's Model
 lambda <- c(6.04, 8.90) #alta e baixa

@@ -12,7 +12,7 @@ prob   <- 0
 r      <- c(1.5, -1.61)
 mu     <- r + sigma^2 / 2
 X0     <- 70.5
-p0     <- c(lambda[2]/(lambda[1]+lambda[2]),lambda[1]/(lambda[1]+lambda[2])) #0.5,0.5)
+p0     <- c(0.5,0.5)
 
 T  <- 1.00
 N  <- 2^12 # number of discrete time steps

@@ -26,7 +26,7 @@ X_Mao    <- matrix(rep(0,M*P),ncol=P)
 X_Nguyen <- matrix(rep(0,M*P),ncol=P)
 X_Trap1  <- matrix(rep(0,M*P),ncol=P)
 X_Trap2  <- matrix(rep(0,M*P),ncol=P)
-X_Ref    <- matrix(rep(0,M*P),ncol=P)
+X_Ref    <- matrix(rep(0,M*1),ncol=1)
 
 run_simulations <- TRUE
 if(file.exists("PlotData2.rda"))
@@ -36,15 +36,15 @@ if(file.exists("PlotData2.rda"))
     
 } else {
 
-    # Run Simulations
+    # Run Reference  (Nguyen's Method)
+    Nref  <- 2^15
+    X_Ref <- NguyenFuncRcpp(T/Nref, Nref, M)
+    cat("Done with reference...\n") 
+    
     for(p in 1:P)
     {
         cat("Begining for p = ",p,"...\n")
-        # Run Reference  (Nguyen's Method)
-        Nref <- 2^15
-        X_Ref[,p] <- NguyenFuncRcpp(T/Nref, Nref, M)
            
-        cat("  done with reference...\n") 
         R  <- 2**p
         L  <- N / R
         Dt <- R * dt
@@ -70,6 +70,7 @@ ErrTrap1  = abs( RefMean - colMeans(X_Trap1)  ) #apply(X_Trap1, 1:2,f)) )
 ErrTrap2  = abs( RefMean - colMeans(X_Trap2)  ) #apply(X_Trap2, 1:2,f)) )
 
 # Fazendo o gráfico
+jpeg('comparison2.jpg')
 dts = c(dt*2**(1:P))
 plot(dts,ErrMao,main="Weak Convergence For Zhang's Model",
      ylab="Log of Abs. Difference",
@@ -78,6 +79,7 @@ lines(dts,ErrTrap1,lwd=2,col="red",type="b")
 lines(dts,ErrTrap2,lwd=2,col="magenta",type="b")
 lines(dts,ErrNguyen,lwd=2,col="green",type="b")
 lines(dts,dts^(1),lwd=2,col="cyan",lty=2)
+dev.off()
 #legend(0.0022, 25,
 #       legend=c("Mao",
 #                "Nguyen","Trap1", "Trap2", "Reference (slope=1)"),

@@ -1,12 +1,13 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double NguyenSim(double Dt, unsigned int L, double X0, double A0,
-              NumericVector mu, NumericVector sigma, NumericVector lambda)
+double NguyenSim(double Dt, unsigned int L, double X0, NumericVector &p0,
+              NumericVector &mu, NumericVector &sigma, NumericVector &lambda,
+              IntegerVector &E)
 {
     double X = X0;
-    int    A = A0;
     double t = 0;
+    unsigned int A = sample(E,1,true,p0)[0];
     
     NumericVector norms = rnorm(L);
     double tau = rexp(1,lambda[A])[0];
@@ -38,17 +39,11 @@ NumericVector NguyenFuncRcpp(double Dt, unsigned int L, unsigned int M)
     NumericVector mu     = env["mu"];
     NumericVector sigma  = env["sigma"];
     IntegerVector E      = {0,1};
-    int A0               = sample(E,1,false,p0)[0];
    
-    Function set_seed("set.seed");
-    
     //Running Simulations 
     NumericVector X(M);
     for(unsigned int j = 0; j < M; ++j)
-    {
-        set_seed(j);
-        X[j] = NguyenSim(Dt,L,X0,A0,mu,sigma,lambda);
-    }
+        X[j] = NguyenSim(Dt,L,X0,p0,mu,sigma,lambda,E);
     
     return(X);
 }

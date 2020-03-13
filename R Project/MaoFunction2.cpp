@@ -1,17 +1,19 @@
 #include <Rcpp.h>
+#include <random>
+#include <cmath>
 using namespace Rcpp;
 
-double MaoSim(double Dt, unsigned int L, double X0, double A0,
-              NumericVector mu, NumericVector sigma,
-              NumericMatrix P, IntegerVector E)
+double MaoSim(double Dt, unsigned int L, double X0, NumericVector &p0,
+              NumericVector &mu, NumericVector &sigma,
+              NumericMatrix &P, IntegerVector &E)
 {
     double X = X0;
-    int    A = A0;
+    unsigned int A = sample(E,1,true,p0)[0];
    
     NumericVector norms = rnorm(L);
     for(unsigned int j = 0; j < L; ++j)
     {
-        A = sample(E,1,false,(NumericVector)P(A,_))[0];
+        A = sample(E,1,true,(NumericVector)P(A,_))[0];
         X = X + Dt*mu[A]*X + sigma[A]*X*norms[j]*sqrt(Dt);
 
         if(j % 1000 == 0) Rcpp::checkUserInterrupt();
@@ -30,7 +32,6 @@ NumericVector MaoFuncRcpp(double Dt, unsigned int L, unsigned int M)
     NumericVector mu     = env["mu"];
     NumericVector sigma  = env["sigma"];
     IntegerVector E      = {0,1};
-    int A0               = sample(E,1,false,p0)[0];
    
     //Gerar P (usar expm)
     NumericMatrix Rho(2,2);
@@ -39,16 +40,17 @@ NumericVector MaoFuncRcpp(double Dt, unsigned int L, unsigned int M)
     Function expm("expm"); 
     NumericMatrix P = expm(Rho*Dt);
    
-    Function set_seed("set.seed");
-    
     //Running Simulations 
     NumericVector X(M);
     for(unsigned int j = 0; j < M; ++j)
-    {
-        set_seed(j); 
-        X[j] = MaoSim(Dt,L,X0,A0,mu,sigma,P,E);
-    }
+        X[j] = MaoSim(Dt,L,X0,p0,mu,sigma,P,E);
     
     return(X);
 }
 
+
+// [[Rcpp::export]]
+IntegerVector sample_cpp(int n, NumericVector p){
+    IntegerVector E = {0,1};
+    return sample(E,n,true,p);
+}

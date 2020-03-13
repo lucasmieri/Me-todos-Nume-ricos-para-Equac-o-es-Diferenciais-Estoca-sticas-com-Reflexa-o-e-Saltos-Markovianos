@@ -1,12 +1,13 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double TrapSim1(double Dt, unsigned int L, double X0, double A0,
-              NumericVector mu, NumericVector sigma, NumericVector lambda)
+double TrapSim1(double Dt, unsigned int L, double X0, NumericVector &p0,
+              NumericVector &mu, NumericVector &sigma, NumericVector &lambda, 
+              IntegerVector &E)
 {
     double X = X0;
-    int    A = A0;
     double t = 0;
+    unsigned int A = sample(E,1,true,p0)[0];
     
     double theta  = 0.5;
     double alfa_1 = 1/(2*theta*(1-theta));
@@ -41,11 +42,11 @@ double TrapSim1(double Dt, unsigned int L, double X0, double A0,
     return(X);
 }
 
-double TrapSim2(double Dt, unsigned int L, double X0, double A0,
-                NumericVector mu, NumericVector sigma, NumericMatrix P, IntegerVector E)
+double TrapSim2(double Dt, unsigned int L, double X0, NumericVector &p0,
+                NumericVector &mu, NumericVector &sigma, NumericMatrix &P, IntegerVector &E)
 {
     double X = X0;
-    int    A = A0;
+    unsigned int A = sample(E,1,true,p0)[0];
     
     double theta  = 0.5;
     double alfa_1 = 1/(2*theta*(1-theta));
@@ -56,7 +57,7 @@ double TrapSim2(double Dt, unsigned int L, double X0, double A0,
     double X_step, aux;
     for(unsigned int j = 0; j < L; ++j)
     {
-        A = sample(E,1,false,(NumericVector)P(A,_))[0];
+        A = sample(E,1,true,(NumericVector)P(A,_))[0];
         
         //step1
         X_step = X + mu[A]*X*theta*Dt + sigma[A]*X*norms2[j]*sqrt(theta*Dt);
@@ -84,18 +85,12 @@ NumericVector TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigne
     NumericVector mu     = env["mu"];
     NumericVector sigma  = env["sigma"];
     IntegerVector E      = {0,1};
-    int A0               = sample(E,1,false,p0)[0];
     
-    Function set_seed("set.seed");
-   
     //Running Simulations 
     NumericVector X(M);
     if(type == 1)
         for(unsigned int j = 0; j < M; ++j)
-        {
-            set_seed(j);
-            X[j] = TrapSim1(Dt,L,X0,A0,mu,sigma,lambda);
-        }
+            X[j] = TrapSim1(Dt,L,X0,p0,mu,sigma,lambda,E);
     else
     {
         //Gerar P (usar expm)
@@ -105,10 +100,7 @@ NumericVector TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigne
         Function expm("expm"); 
         NumericMatrix P = expm(Rho*Dt);
         for(unsigned int j = 0; j < M; ++j)
-        {
-            set_seed(j);
-            X[j] = TrapSim2(Dt,L,X0,A0,mu,sigma,P,E);
-        }
+            X[j] = TrapSim2(Dt,L,X0,p0,mu,sigma,P,E);
     }
     
     return(X);

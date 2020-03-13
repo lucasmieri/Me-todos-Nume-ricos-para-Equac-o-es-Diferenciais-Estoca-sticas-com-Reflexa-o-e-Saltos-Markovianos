@@ -5,18 +5,18 @@ source('NguyenFunction.R')
 source('TrapFunction.R')
 
 ## Data for the simulation Zhang's Model
-lambda <- c(6.04, 8.90) #alta e baixa
-sigma  <- c(0.44, 0.63)
+lambda <- c(1,2)#6.04, 8.90) #alta e baixa
+sigma  <- c(0.5,0.25) #0.44, 0.63)
 prob   <- 0
-r      <- c(1.5, -1.61)
+r      <- c(1,-1) #1.5, -1.61)
 mu     <- r + sigma^2 / 2
-X0     <- 70.5
+X0     <- 1#70.5
 p0     <- c(0.5,0.5)
 
 T  <- 1
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 100000 # number of repetitions
+M  <- 1000 # number of repetitions
 P  <- 5      # number of step sizes
 
 f <- function(x) x
@@ -25,46 +25,49 @@ X_Mao    <- matrix(rep(0,M*P),ncol=P)
 X_Nguyen <- matrix(rep(0,M*P),ncol=P)
 X_Trap1  <- matrix(rep(0,M*P),ncol=P)
 X_Trap2  <- matrix(rep(0,M*P),ncol=P)
-X_Ref    <- matrix(rep(0,M*P),ncol=1)
+#X_Ref    <- matrix(rep(0,M*P),ncol=1)
 
-run_simulations <- TRUE
-if(file.exists("PlotData.rda"))
+load_simulations <- FALSE
+if(file.exists("PlotData_tmp.rda") && load_simulations)
 {
-    load("PlotData.rda")
-    run_simulations <- FALSE
+    load("PlotData_tmp.rda")
     
 } else {
 
     for( s in 1:M )
     {
+        if( s%%20 == 0) 
+            cat("Running form s =",s," de",M,"\n")
+        
         # Run Simulations
         for(p in 1:P)
         {
             # Run Reference  (Nguyen's Method)
-            Nref <- 2^15  
-            X_Ref[(s-1)*P+p] <- tail(runNguyen(T/Nref, Nref)$X,n=1)
+            #Nref <- 2^15  
+            #X_Ref[(s-1)*P+p] <- tail(runNguyen(T/Nref, Nref)$X,n=1)
         
             R  <- 2**p
             L  <- N / R
             Dt <- R * dt
     
             # Mao's Method
-            #X_Mao[s,p] <- tail(runMao(Dt, L)$X,n=1)
+            X_Mao[s,p] <- tail(runMao(Dt, L)$X,n=1)
     
             # Nguyen's Method
-            #X_Nguyen[s,p] <- tail(runNguyen(Dt, L)$X,n=1)
+            X_Nguyen[s,p] <- tail(runNguyen(Dt, L)$X,n=1)
     
             # Trapezoidal Method
-            #X_Trap1[s,p] <- tail(runTrap1(Dt, L)$X,n=1)
-            #X_Trap2[s,p] <- tail(runTrap2(Dt, L)$X,n=1)
+            X_Trap1[s,p] <- tail(runTrap1(Dt, L)$X,n=1)
+            X_Trap2[s,p] <- tail(runTrap2(Dt, L)$X,n=1)
         }
     }
 
-    save(X_Ref,X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData.rda")
+    #save(X_Ref,X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData.rda")
+    save(X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData_tmp.rda")
 }
 
 # Tirando a média e calculando a diferença entre médias.
-RefMean   = 115.3203 #mean( X_Ref[1:200000] )
+RefMean   = 1.6874124630113767 #mean( X_Ref[1:200000] )
 ErrMao    = abs( RefMean - colMeans(X_Mao) )
 ErrNguyen = abs( RefMean - colMeans(X_Nguyen) )
 ErrTrap1  = abs( RefMean - colMeans(X_Trap1) )

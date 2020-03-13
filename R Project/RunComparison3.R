@@ -29,11 +29,10 @@ X_Nguyen <- matrix(rep(0,M*P*C),ncol=P)
 X_Trap   <- matrix(rep(0,M*P*C),ncol=P)
 X_Ref    <- matrix(rep(0,M*C),ncol=1)
 
-run_simulations <- TRUE
-if(file.exists("PlotData3.rda"))
+load_simulations <- FALSE
+if(file.exists("PlotData3.rda") && load_simulations)
 {
     load("PlotData3.rda")
-    run_simulations <- FALSE
     
 } else {
 

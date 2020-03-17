@@ -58,10 +58,13 @@ double TrapSim2(double Dt, unsigned int L, double X0, NumericVector &p0,
     
     NumericVector norms1 = rnorm(L);
     NumericVector norms2 = rnorm(L); 
+    NumericVector unifs  = runif(L);
     double X_step, aux;
     for(unsigned int j = 0; j < L; ++j)
     {
-        A = sample(E,1,true,(NumericVector)P(A,_))[0];
+        if(unifs[j] <= P(A,0)) A = 0;
+        else                   A = 1;
+        //A = sample(E,1,true,(NumericVector)P(A,_))[0];
         
         //step1
         X_step = X + mu[A]*X*theta*Dt + sigma[A]*X*norms2[j]*sqrt(theta*Dt);

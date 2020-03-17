@@ -12,9 +12,12 @@ double MaoSim(double Dt, unsigned int L, double X0, NumericVector &p0,
     unsigned int A = sample(E,1,true,p0)[0];
    
     NumericVector norms = rnorm(L);
+    NumericVector unifs = runif(L);
     for(unsigned int j = 0; j < L; ++j)
     {
-        A = sample(E,1,true,(NumericVector)P(A,_))[0];
+        if(unifs[j] <= P(A,0)) A = 0;
+        else                   A = 1;
+        //A = sample(E,1,true,(NumericVector)P(A,_))[0];
         X = X + Dt*mu[A]*X + sigma[A]*X*norms[j]*sqrt(Dt);
         
         //check for user interrupt

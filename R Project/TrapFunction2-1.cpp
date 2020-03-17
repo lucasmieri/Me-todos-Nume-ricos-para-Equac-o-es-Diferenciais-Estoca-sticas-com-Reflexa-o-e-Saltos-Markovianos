@@ -108,7 +108,7 @@ double TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigned int M
             if(j > 0 && j % N_PRINT_STATS == 0 )
             {
                 CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
-                printf("Trap1 stats: %0.7f +- %0.5f (DONE %.2f%%)\n",mean,CI,((float)j+1)/M);
+                printf("Trap1 stats: %0.7f +- %0.5f (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
             }
         }
     else
@@ -131,7 +131,7 @@ double TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigned int M
             if(j > 0 && j % N_PRINT_STATS == 0 )
             {
                 CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
-                printf("Trap2 stats: %0.7f +- %0.5f (DONE %.2f%%)\n",mean,CI,((float)j+1)/M);
+                printf("Trap2 stats: %0.7f +- %0.5f (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
             }
         }
     }

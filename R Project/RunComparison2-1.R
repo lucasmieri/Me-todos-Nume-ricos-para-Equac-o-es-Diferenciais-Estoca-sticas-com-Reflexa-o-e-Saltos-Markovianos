@@ -18,7 +18,7 @@ p0     <- c(0.5,0.5)
 T  <- 1
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 2*10^7 # number of repetitions
+M  <- 1000#10^7 # number of repetitions
 P  <- 5     # number of step sizes
 
 X_Mao    <- rep(0,P)
@@ -42,10 +42,10 @@ if(file.exists("PlotData2-1.rda") && load_simulations)
         Dt <- R * dt
     
         # Mao's Method
-        #X_Mao[p]    <- MaoFuncRcpp(Dt, L, M)
+        X_Mao[p]    <- MaoFuncRcpp(Dt, L, M)
     
         # Nguyen's Method
-        #X_Nguyen[p] <- NguyenFuncRcpp(Dt, L,M)
+        X_Nguyen[p] <- NguyenFuncRcpp(Dt, L,M)
     
         # Trapezoidal Method
         X_Trap1[p] <- TrapFuncRcpp(1,Dt,L,M)

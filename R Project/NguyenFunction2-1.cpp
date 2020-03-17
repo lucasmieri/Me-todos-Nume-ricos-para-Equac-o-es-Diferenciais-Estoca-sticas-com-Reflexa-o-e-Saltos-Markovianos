@@ -10,7 +10,8 @@ double NguyenSim(double Dt, unsigned int L, double X0, NumericVector &p0,
     double t = 0;
     unsigned int A = sample(E,1,true,p0)[0];
     
-    NumericVector norms = rnorm(L);
+    //NumericVector norms = rnorm(L);
+    double norm;
     double tau = rexp(1,lambda[A])[0];
     for(unsigned int j = 0; j < L; ++j)
     {
@@ -21,8 +22,9 @@ double NguyenSim(double Dt, unsigned int L, double X0, NumericVector &p0,
             else         A = 0;
             tau += rexp(1,lambda[A])[0];
         }
-        X = X + Dt*X*mu[A] + X*norms[j]*sqrt(Dt)*sigma[A]
-              + 0.5*sigma[A]*sigma[A]*X*(Dt*norms[j]*norms[j] - Dt);
+        norm = rnorm(1)[0];
+        X = X + Dt*X*mu[A] + X*norm*sqrt(Dt)*sigma[A]
+              + 0.5*sigma[A]*sigma[A]*X*(Dt*norm*norm - Dt);
 
         if(j % 1000 == 0) Rcpp::checkUserInterrupt();
     }

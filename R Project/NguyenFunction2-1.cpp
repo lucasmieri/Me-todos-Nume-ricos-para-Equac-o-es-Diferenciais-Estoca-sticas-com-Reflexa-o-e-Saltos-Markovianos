@@ -1,6 +1,8 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 using namespace Rcpp;
+#define R_INTERRUPT 1000
+#define N_PRINT_STATS 1000
 
 double NguyenSim(double Dt, unsigned int L, double X0, NumericVector &p0,
               NumericVector &mu, NumericVector &sigma, NumericVector &lambda,
@@ -10,8 +12,7 @@ double NguyenSim(double Dt, unsigned int L, double X0, NumericVector &p0,
     double t = 0;
     unsigned int A = sample(E,1,true,p0)[0];
     
-    //NumericVector norms = rnorm(L);
-    double norm;
+    NumericVector norms = rnorm(L);
     double tau = rexp(1,lambda[A])[0];
     for(unsigned int j = 0; j < L; ++j)
     {
@@ -22,11 +23,10 @@ double NguyenSim(double Dt, unsigned int L, double X0, NumericVector &p0,
             else         A = 0;
             tau += rexp(1,lambda[A])[0];
         }
-        norm = rnorm(1)[0];
-        X = X + Dt*X*mu[A] + X*norm*sqrt(Dt)*sigma[A]
-              + 0.5*sigma[A]*sigma[A]*X*(Dt*norm*norm - Dt);
+        X = X + Dt*X*mu[A] + X*norms[j]*sqrt(Dt)*sigma[A]
+              + 0.5*sigma[A]*sigma[A]*X*(Dt*norms[j]*norms[j] - Dt);
 
-        if(j % 1000 == 0) Rcpp::checkUserInterrupt();
+        if(j % R_INTERRUPT == 0) Rcpp::checkUserInterrupt();
     }
     return(X);
 }
@@ -44,12 +44,21 @@ double NguyenFuncRcpp(double Dt, unsigned int L, unsigned int M)
     IntegerVector E      = {0,1};
    
     //Running Simulations 
-    double mean = 0, alpha; //X(M);
+    double mean = 0, var = 0, X, CI; //NumericVector X(M);
     for(unsigned int j = 0; j < M; ++j)
     {
-        alpha = ((double)j)/(j+1);
-        mean = (alpha)*mean + (1-alpha)*NguyenSim(Dt,L,X0,p0,mu,sigma,lambda,E);
         //X[j] = NguyenSim(Dt,L,X0,p0,mu,sigma,lambda,E);
+        X = NguyenSim(Dt,L,X0,p0,mu,sigma,lambda,E);
+        
+        mean = mean + (X-mean)/(j+1);
+        if(j > 0)
+            var = var + (mean-X)*(mean-X)/(j+1) - var/(j);
+        
+        if(j > 0 && j % N_PRINT_STATS == 0 )
+        {
+            CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
+            printf("Nguyen stats: %0.7f +- %0.5f\n",mean,CI);
+        }
     }
     return(mean);
 }

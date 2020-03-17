@@ -1,8 +1,8 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
-#include <random>
-#include <cmath>
 using namespace Rcpp;
+#define R_INTERRUPT 1000
+#define N_PRINT_STATS 1000
 
 double MaoSim(double Dt, unsigned int L, double X0, NumericVector &p0,
               NumericVector &mu, NumericVector &sigma,
@@ -11,13 +11,14 @@ double MaoSim(double Dt, unsigned int L, double X0, NumericVector &p0,
     double X = X0;
     unsigned int A = sample(E,1,true,p0)[0];
    
-    //NumericVector norms = rnorm(L);
+    NumericVector norms = rnorm(L);
     for(unsigned int j = 0; j < L; ++j)
     {
         A = sample(E,1,true,(NumericVector)P(A,_))[0];
-        X = X + Dt*mu[A]*X + sigma[A]*X*rnorm(1)[0]*sqrt(Dt);
-
-        if(j % 1000 == 0) Rcpp::checkUserInterrupt();
+        X = X + Dt*mu[A]*X + sigma[A]*X*norms[j]*sqrt(Dt);
+        
+        //check for user interrupt
+        if(j % R_INTERRUPT == 0) Rcpp::checkUserInterrupt();
     }
     return(X);
 }
@@ -38,24 +39,26 @@ double MaoFuncRcpp(double Dt, unsigned int L, unsigned int M)
     NumericMatrix Rho(2,2);
     Rho(0,0) = -lambda[0]; Rho(0,1) = lambda[0];
     Rho(1,0) = lambda[1];  Rho(1,1) = -lambda[1];
-    Function expm("expm"); 
+    Function expm("expm");
     NumericMatrix P = expm(Rho*Dt);
    
     //Running Simulations 
-    double mean = 0, alpha; //X(M);
+    double mean = 0, var = 0, X, CI; //NumericVector X(M);
     for(unsigned int j = 0; j < M; ++j)
     {
-        alpha = ((double)j)/(j+1);
-        mean = (alpha)*mean + (1-alpha)*MaoSim(Dt,L,X0,p0,mu,sigma,P,E);
+        X = MaoSim(Dt,L,X0,p0,mu,sigma,P,E);
+        mean = mean + (X-mean)/(j+1);
+        if(j > 0)
+            var = var + (mean-X)*(mean-X)/(j+1) - var/(j);
+        
+        if(j > 0 && j % N_PRINT_STATS == 0 )
+        {
+            CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
+            printf("Mao stats: %0.7f +- %0.5f\n",mean,CI);
+        }
+        
         //X[j] = MaoSim(Dt,L,X0,p0,mu,sigma,P,E);
     }
     
     return(mean);
-}
-
-
-// [[Rcpp::export]]
-IntegerVector sample_cpp(int n, NumericVector p){
-    IntegerVector E = {0,1};
-    return sample(E,n,true,p);
 }

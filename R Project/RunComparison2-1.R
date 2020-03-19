@@ -18,7 +18,7 @@ p0     <- c(0.5,0.5)
 T  <- 1
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 10000#*2*10^7 # number of repetitions
+M  <- 2*10^7 # number of repetitions
 P  <- 5     # number of step sizes
 
 X_Mao    <- rep(0,P)
@@ -26,7 +26,7 @@ X_Nguyen <- rep(0,P)
 X_Trap1  <- rep(0,P)
 X_Trap2  <- rep(0,P)
 
-load_simulations <- FALSE
+load_simulations <- TRUE
 if(file.exists("PlotData2-1.rda") && load_simulations)
 {
     load("PlotData2-1.rda")
@@ -66,7 +66,7 @@ ErrTrap2  = abs( RefMean - X_Trap2 )
 dts = c(dt*2**(1:P))
 plot(dts,ErrMao,main="Weak Convergence For Zhang's Model",
      ylab="Log of Abs. Difference",
-     xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.0001,20),log="xy")
+     xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.00001,10),log="xy")
 lines(dts,ErrTrap1,lwd=2,col="red",type="b")
 lines(dts,ErrTrap2,lwd=2,col="magenta",type="b")
 lines(dts,ErrNguyen,lwd=2,col="green",type="b")

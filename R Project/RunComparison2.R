@@ -18,7 +18,7 @@ p0     <- c(0.5,0.5)
 T  <- 1
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 100000 # number of repetitions
+M  <- 10^7 # number of repetitions
 P  <- 5     # number of step sizes
 
 f <- function(x) x
@@ -29,8 +29,7 @@ X_Trap1  <- matrix(rep(0,M*P),ncol=P)
 X_Trap2  <- matrix(rep(0,M*P),ncol=P)
 X_Ref    <- matrix(rep(0,M*1),ncol=1)
 
-load_simulations <- FALSE
-if(file.exists("PlotData2.rda") && load_simulations)
+if(file.exists("PlotData2.rda"))
 {
     load("PlotData2.rda")
     
@@ -60,7 +59,7 @@ if(file.exists("PlotData2.rda") && load_simulations)
         X_Trap2[,p] <- TrapFuncRcpp(2,Dt,L,M)
     }
     #save(X_Ref,X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData2.rda")
-    save(X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData2.rda")
+    #save(X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData2.rda")
 }
 
 # Tirando a média e calculando a diferença entre médias.

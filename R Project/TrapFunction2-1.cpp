@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 #define R_INTERRUPT 1000
-#define N_PRINT_STATS 1000
+#define N_PRINT_STATS 10000
 
 double TrapSim1(double Dt, unsigned int L, double X0, NumericVector &p0,
               NumericVector &mu, NumericVector &sigma, NumericVector &lambda, 
@@ -13,8 +13,8 @@ double TrapSim1(double Dt, unsigned int L, double X0, NumericVector &p0,
     unsigned int A = sample(E,1,true,p0)[0];
     
     double theta  = 0.5;
-    double alfa_1 = 1/(2*theta*(1-theta));
-    double alfa_2 = ((1-theta)*(1-theta)+theta*theta)/(2*theta*(1-theta));
+    double alfa_1 = 1.0/(2*theta*(1.0-theta));
+    double alfa_2 = ((1.0-theta)*(1.0-theta)+theta*theta)/(2*theta*(1.0-theta));
     
     NumericVector norms1 = rnorm(L);
     NumericVector norms2 = rnorm(L);
@@ -53,8 +53,8 @@ double TrapSim2(double Dt, unsigned int L, double X0, NumericVector &p0,
     unsigned int A = sample(E,1,true,p0)[0];
     
     double theta  = 0.5;
-    double alfa_1 = 1/(2*theta*(1-theta));
-    double alfa_2 = ((1-theta)*(1-theta)+theta*theta)/(2*theta*(1-theta));
+    double alfa_1 = 1.0/(2*theta*(1.0-theta));
+    double alfa_2 = ((1.0-theta)*(1.0-theta)+theta*theta)/(2*theta*(1.0-theta));
     
     NumericVector norms1 = rnorm(L);
     NumericVector norms2 = rnorm(L); 
@@ -94,21 +94,22 @@ double TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigned int M
     IntegerVector E      = {0,1};
     
     //Running Simulations 
-    double mean = 0, var = 0, X, CI; //NumericVector X(M);
+    long double mean = 0, var = 0, X;
+    double CI; //NumericVector X(M);
     if(type == 1)
         for(unsigned int j = 0; j < M; ++j)
         {
             //X[j] = TrapSim1(Dt,L,X0,p0,mu,sigma,lambda,E);
             X = TrapSim1(Dt,L,X0,p0,mu,sigma,lambda,E);
             
-            mean = mean + (X-mean)/(j+1);
+            mean = mean + (X-mean)/(j+1.0);
             if(j > 0)
-                var = var + (mean-X)*(mean-X)/(j+1) - var/(j);
+                var = var + (mean-X)*(mean-X)/(j+1.0) - var/(j);
             
             if(j > 0 && j % N_PRINT_STATS == 0 )
             {
                 CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
-                printf("Trap1 stats: %0.7f +- %0.5f (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
+                printf("Trap1 stats: %0.7Lf +- %0.5lf (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
             }
         }
     else
@@ -124,14 +125,14 @@ double TrapFuncRcpp(unsigned int type, double Dt, unsigned int L, unsigned int M
             //X[j] = TrapSim2(Dt,L,X0,p0,mu,sigma,P,E);
             X = TrapSim2(Dt,L,X0,p0,mu,sigma,P,E);
             
-            mean = mean + (X-mean)/(j+1);
+            mean = mean + (X-mean)/(j+1.0);
             if(j > 0)
-                var = var + (mean-X)*(mean-X)/(j+1) - var/(j);
+                var = var + (mean-X)*(mean-X)/(j+1.0) - var/(j);
             
             if(j > 0 && j % N_PRINT_STATS == 0 )
             {
                 CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
-                printf("Trap2 stats: %0.7f +- %0.5f (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
+                printf("Trap2 stats: %0.7Lf +- %0.5lf (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
             }
         }
     }

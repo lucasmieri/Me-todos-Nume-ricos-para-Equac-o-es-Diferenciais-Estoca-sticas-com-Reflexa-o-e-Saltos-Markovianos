@@ -7,8 +7,8 @@ Rcpp::sourceCpp('NguyenFunction2-1.cpp')
 Rcpp::sourceCpp('TrapFunction2-1.cpp')
 
 ## Data for the simulation Zhang's Model
-lambda <- c(1,2)#6.04, 8.90) #alta e baixa
-sigma  <- c(0.5,0.25) #0.44, 0.63)
+lambda <- c(5,10)#6.04, 8.90) #alta e baixa
+sigma  <- c(0.1,0.01)#0.5,0.25) #0.44, 0.63)
 prob   <- 0
 r      <- c(1,-1) #1.5, -1.61)
 mu     <- r + sigma^2 / 2
@@ -18,7 +18,7 @@ p0     <- c(0.5,0.5)
 T  <- 1
 N  <- 2^12 # number of discrete time steps
 dt <- T / N
-M  <- 2*10^7 # number of repetitions
+M  <- 10^6 # number of repetitions
 P  <- 5     # number of step sizes
 
 X_Mao    <- rep(0,P)
@@ -26,7 +26,7 @@ X_Nguyen <- rep(0,P)
 X_Trap1  <- rep(0,P)
 X_Trap2  <- rep(0,P)
 
-load_simulations <- TRUE
+load_simulations <- FALSE #TRUE
 if(file.exists("PlotData2-1.rda") && load_simulations)
 {
     load("PlotData2-1.rda")
@@ -42,16 +42,16 @@ if(file.exists("PlotData2-1.rda") && load_simulations)
         Dt <- R * dt
     
         # Mao's Method
-        X_Mao[p]    <- MaoFuncRcpp(Dt, L, M)
+        #X_Mao[p]    <- MaoFuncRcpp(Dt, L, M)
     
         # Nguyen's Method
-        X_Nguyen[p] <- NguyenFuncRcpp(Dt, L,M)
+        #X_Nguyen[p] <- NguyenFuncRcpp(Dt, L,M)
     
         # Trapezoidal Method
         X_Trap1[p] <- TrapFuncRcpp(1,Dt,L,M)
         X_Trap2[p] <- TrapFuncRcpp(2,Dt,L,M)
     }
-    save(X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData2-1.rda")
+    #save(X_Mao,X_Nguyen,X_Trap1,X_Trap2,file="PlotData2-1.rda")
 }
 
 # Tirando a média e calculando a diferença entre médias.
@@ -66,7 +66,7 @@ ErrTrap2  = abs( RefMean - X_Trap2 )
 dts = c(dt*2**(1:P))
 plot(dts,ErrMao,main="Weak Convergence For Zhang's Model",
      ylab="Log of Abs. Difference",
-     xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.00001,10),log="xy")
+     xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.0000001,10),log="xy")
 lines(dts,ErrTrap1,lwd=2,col="red",type="b")
 lines(dts,ErrTrap2,lwd=2,col="magenta",type="b")
 lines(dts,ErrNguyen,lwd=2,col="green",type="b")

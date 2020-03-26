@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 #define R_INTERRUPT 1000
-#define N_PRINT_STATS 1000
+#define N_PRINT_STATS 10000
 
 double MaoSim(double Dt, unsigned int L, double X0, NumericVector &p0,
               NumericVector &mu, NumericVector &sigma,
@@ -46,18 +46,20 @@ double MaoFuncRcpp(double Dt, unsigned int L, unsigned int M)
     NumericMatrix P = expm(Rho*Dt);
    
     //Running Simulations 
-    double mean = 0, var = 0, X, CI; //NumericVector X(M);
+    long double mean = 0, var = 0, X;
+    double CI; //NumericVector X(M);
     for(unsigned int j = 0; j < M; ++j)
     {
         X = MaoSim(Dt,L,X0,p0,mu,sigma,P,E);
-        mean = mean + (X-mean)/(j+1);
+        
+        mean = mean + (X-mean)/(j+1.0);
         if(j > 0)
             var = var + (mean-X)*(mean-X)/(j+1) - var/(j);
         
         if(j > 0 && j % N_PRINT_STATS == 0 )
         {
             CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
-            printf("Mao stats: %0.7f +- %0.5f (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
+            printf("Mao stats: %0.7Lf +- %0.5Lf (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
         }
         
         //X[j] = MaoSim(Dt,L,X0,p0,mu,sigma,P,E);

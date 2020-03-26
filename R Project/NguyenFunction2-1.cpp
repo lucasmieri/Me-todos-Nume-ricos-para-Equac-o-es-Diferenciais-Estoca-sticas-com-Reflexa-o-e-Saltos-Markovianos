@@ -58,7 +58,7 @@ double NguyenFuncRcpp(double Dt, unsigned int L, unsigned int M)
         if(j > 0 && j % N_PRINT_STATS == 0 )
         {
             CI = Rf_qnorm5(0.995,0,1,true,false)*var/sqrt(j+1);
-            printf("Nguyen stats: %0.7Lf +- %0.5Lf (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
+            printf("Nguyen stats: %0.7Lf +- %0.5lf (DONE %.0f%%)\n",mean,CI,((float)j+1)/M*100);
         }
     }
     return(mean);

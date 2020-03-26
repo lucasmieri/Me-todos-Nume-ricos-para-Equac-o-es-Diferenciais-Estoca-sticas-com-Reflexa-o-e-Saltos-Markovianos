@@ -42,10 +42,10 @@ if(file.exists("PlotData2-1.rda") && load_simulations)
         Dt <- R * dt
     
         # Mao's Method
-        #X_Mao[p]    <- MaoFuncRcpp(Dt, L, M)
+        X_Mao[p]    <- MaoFuncRcpp(Dt, L, M)
     
         # Nguyen's Method
-        #X_Nguyen[p] <- NguyenFuncRcpp(Dt, L,M)
+        X_Nguyen[p] <- NguyenFuncRcpp(Dt, L,M)
     
         # Trapezoidal Method
         X_Trap1[p] <- TrapFuncRcpp(1,Dt,L,M)

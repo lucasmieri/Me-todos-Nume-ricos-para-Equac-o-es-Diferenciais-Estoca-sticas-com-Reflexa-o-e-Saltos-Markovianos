@@ -8,7 +8,7 @@ Rcpp::sourceCpp('TrapFunction2-1.cpp')
 
 ## Data for the simulation Zhang's Model
 lambda <- c(5,10)#6.04, 8.90) #alta e baixa
-sigma  <- c(0.1,0.01)#0.5,0.25) #0.44, 0.63)
+sigma  <- c(0.2,0.1)#0.5,0.25) #0.44, 0.63)
 prob   <- 0
 r      <- c(1,-1) #1.5, -1.61)
 mu     <- r + sigma^2 / 2
@@ -16,7 +16,7 @@ X0     <- 1#70.5
 p0     <- c(0.5,0.5)
 
 T  <- 1
-N  <- 2^12 # number of discrete time steps
+N  <- 2^8 # number of discrete time steps
 dt <- T / N
 M  <- 10^6 # number of repetitions
 P  <- 5     # number of step sizes

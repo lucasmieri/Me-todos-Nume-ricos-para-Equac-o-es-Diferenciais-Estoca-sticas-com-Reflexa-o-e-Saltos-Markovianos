@@ -71,8 +71,19 @@ lines(dts,ErrTrap1,lwd=2,col="red",type="b")
 lines(dts,ErrTrap2,lwd=2,col="magenta",type="b")
 lines(dts,ErrNguyen,lwd=2,col="green",type="b")
 lines(dts,dts^(1),lwd=2,col="cyan",lty=2)
-#dev.off()
-#legend(0.0022, 25,
-#       legend=c("Mao",
-#                "Nguyen","Trap1", "Trap2", "Reference (slope=1)"),
-#       col=c("blue", "red", "magenta", "green","cyan"), lty=1, lwd=2)
+
+legend("bottomright", legend=c("Mao","Trap1", "Trap2","Nguyen",
+                            "Reference (slope=1)"),col=c("blue", "red", "magenta", "green","cyan"),lty=1, lwd=2 )
+
+Coef_Mao<-lm(log(ErrMao)~log(dts))
+Coef_Trap1<-lm(log(ErrTrap1)~log(dts))
+Coef_Trap2<-lm(log(ErrTrap2)~log(dts))
+Coef_Nguyen<-lm(log(ErrNguyen)~log(dts))
+
+Coef_Mao[["coefficients"]]
+Coef_Trap1[["coefficients"]]
+Coef_Trap2[["coefficients"]]
+Coef_Nguyen[["coefficients"]]
+
+
+

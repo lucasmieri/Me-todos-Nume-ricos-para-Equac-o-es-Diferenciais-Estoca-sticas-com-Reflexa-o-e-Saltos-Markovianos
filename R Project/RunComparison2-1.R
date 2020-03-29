@@ -70,29 +70,34 @@ dts = c(dt*2**(1:P))
 #     xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.0000001,10),log="xy")
 plot(dts,ErrMao,type="p",col="blue",lwd=2,log="xy",ylim = c(10^{-6},10),
      main = "Mao et al.'s Method", ylab="Log of Abs. Difference",xlab="Log of Time Step h")
-abline(lm(log(ErrMao,base=10)~log(dts,base=10)),col="blue",lwd=3)
+reg = lm(log(ErrMao,base=10)~log(dts,base=10))
+cat(sprintf("Slope Mao: %f\n",reg$coefficients[2]))
+abline(reg,col="blue",lwd=3)
 lines(dts,dts^(1),lwd=2,col="gray",lty=2)
 
 #Plot Nguyen
 plot(dts,ErrNguyen,type="p",col="green",lwd=2,log="xy",ylim = c(10^{-6},10),
      main = "Nguyen et al.'s Method", ylab="Log of Abs. Difference",xlab="Log of Time Step h")
-abline(lm(log(ErrNguyen,base=10)~log(dts,base=10)),col="green",lwd=3)
+reg = lm(log(ErrNguyen,base=10)~log(dts,base=10))
+cat(sprintf("Slope Nguyen: %f\n",reg$coefficients[2]))
+abline(reg,col="green",lwd=3)
 lines(dts,dts^(1),lwd=2,col="gray",lty=2)
 
 #Plot Trap1
 plot(dts,ErrTrap1,type="p",col="red",lwd=2,log="xy",ylim = c(10^{-6},10),
      main = "Trapezoidal 1", ylab="Log of Abs. Difference",xlab="Log of Time Step h")
-abline(lm(log(ErrTrap1,base=10)~log(dts,base=10)),col="red",lwd=3)
+reg = lm(log(ErrTrap1,base=10)~log(dts,base=10))
+cat(sprintf("Slope Trap 1: %f\n",reg$coefficients[2]))
+abline(reg,col="red",lwd=3)
 lines(dts,dts^(1),lwd=2,col="gray",lty=2)
 
 #Plot Trap2
 plot(dts,ErrTrap2,type="p",col="magenta",lwd=2,log="xy",ylim = c(10^{-6},10),
      main = "Trapezoidal 2", ylab="Log of Abs. Difference",xlab="Log of Time Step h")
-abline(lm(log(ErrTrap2,base=10)~log(dts,base=10)),col="magenta",lwd=3)
+reg = lm(log(ErrTrap2,base=10)~log(dts,base=10))
+cat(sprintf("Slope Trap 2: %f\n",reg$coefficients[2]))
+abline(reg,col="magenta",lwd=3)
 lines(dts,dts^(1),lwd=2,col="gray",lty=2)
 
-#dev.off()
-#legend(0.0022, 25,
-#       legend=c("Mao",
-#                "Nguyen","Trap1", "Trap2", "Reference (slope=1)"),
-#       col=c("blue", "red", "magenta", "green","cyan"), lty=1, lwd=2)
+dev.off()
+

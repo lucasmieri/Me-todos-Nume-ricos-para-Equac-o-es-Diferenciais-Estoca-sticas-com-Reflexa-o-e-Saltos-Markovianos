@@ -65,9 +65,8 @@ ErrTrap2  = abs( RefMean - X_Trap2 )
 jpeg('comparison2-1.jpg')
 par(mfrow=c(2,2))
 dts = c(dt*2**(1:P))
-#plot(dts,ErrMao,main="Weak Convergence For Zhang's Model",
-#     ylab="Log of Abs. Difference",
-#     xlab="Log of Time Step h",type="b",col="blue",lwd=2,ylim=c(0.0000001,10),log="xy")
+
+#Plot Mao
 plot(dts,ErrMao,type="p",col="blue",lwd=2,log="xy",ylim = c(10^{-6},10),
      main = "Mao et al.'s Method", ylab="Log of Abs. Difference",xlab="Log of Time Step h")
 reg = lm(log(ErrMao,base=10)~log(dts,base=10))

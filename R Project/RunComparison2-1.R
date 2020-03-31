@@ -18,7 +18,7 @@ p0     <- c(0.5,0.5)
 T  <- 1
 N  <- 2^9 # number of discrete time steps
 dt <- T / N
-M  <- 2*10^7 # number of repetitions
+M  <- 10^7 # number of repetitions
 P  <- 5     # number of step sizes
 
 X_Mao    <- rep(0,P)
@@ -62,7 +62,7 @@ ErrTrap1  = abs( RefMean - X_Trap1 )
 ErrTrap2  = abs( RefMean - X_Trap2 )
 
 # Fazendo o gráfico
-jpeg('comparison2-1.jpg')
+#jpeg('comparison2-1.jpg')
 par(mfrow=c(2,2))
 dts = c(dt*2**(1:P))
 
@@ -98,5 +98,4 @@ cat(sprintf("Slope Trap 2: %f\n",reg$coefficients[2]))
 abline(reg,col="magenta",lwd=3)
 lines(dts,dts^(1),lwd=2,col="gray",lty=2)
 
-dev.off()
-
+#dev.off()
